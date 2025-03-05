@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget
 from ui.home_page.home_page import HomeScreen
+from ui.thermal_cam.thermal_cam import ThermalCamera 
 
 class MainWindow(QMainWindow):
     def __init__(self):

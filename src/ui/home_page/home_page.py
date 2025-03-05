@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from PyQt5.QtCore import QSize
-from ui.thermal_cam.thermal_cam import ThermalCam 
-from ui.thermal_cam.thermal_cam import VideoModel
+from ui.thermal_cam.thermal_cam import ThermalCamera 
+
 
 class HomeScreen(QWidget):
     def __init__(self, parent):
