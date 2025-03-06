@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from PyQt5.QtCore import QSize
 from ui.feed.thermal_cam import ThermalCam
 from ui.feed.rgb_cam import RGBCam
+from ui.heater_controll.heater_control import HeaterControl
 
 class HomeScreen(QWidget):
     def __init__(self, parent):
@@ -40,17 +41,18 @@ class HomeScreen(QWidget):
 
         # Connect buttons to their respective methods
         self.rgb_button.clicked.connect(self.show_rgb_cam)
-        self.thermal_button.clicked.connect(self.show_thermal_cam)
+        self.thermal_button.clicked.connect(self.start_thermal_feed)
         self.serial_button.clicked.connect(self.show_heater_control)
 
-    def show_thermal_cam(self):
+    def start_thermal_feed(self):
         print("Thermal feed button clicked")
-        self.main_window.switch_screen(ThermalCam(self.main_window, self.main_window))
+        self.thermal_cam = ThermalCam(self, self.main_window)
+        self.thermal_cam.show()
 
     def show_rgb_cam(self):
         print("RGB feed button clicked")
-        self.main_window.switch_screen(RGBCam(self.main_window))
+        self.main_window.switch_screen(RGBCam(self.main_window, self.main_window))
 
     def show_heater_control(self):
         print("Heater Control button clicked")
-        # self.main_window.switch_screen(HeaterControl(self.main_window))
+        self.main_window.switch_screen(HeaterControl(self.main_window, self.main_window))
