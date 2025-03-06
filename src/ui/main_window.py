@@ -1,12 +1,13 @@
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QMainWindow
 from ui.home_page.home_page import HomeScreen
-from ui.thermal_cam.thermal_cam import ThermalCamera 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("SLS Camera Feed")
-        self.setGeometry(100, 100, 400, 600)
-        self.setStyleSheet("background-color: red;")  # Set the background color to red
+        self.setWindowTitle("3D Printer App")
+        self.setGeometry(100, 100, 800, 600)
         self.home_screen = HomeScreen(self)
         self.setCentralWidget(self.home_screen)
+
+    def switch_screen(self, new_screen):
+        self.setCentralWidget(new_screen)

@@ -6,9 +6,9 @@ import threading
 import numpy as np
 import cv2 as cv
 from flask import Flask, Response
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
 from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtCore import QTimer, QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal
 from senxor.mi48 import MI48, format_header, format_framestats
 from senxor.utils import data_to_frame, remap, cv_filter, RollingAverageFilter, connect_senxor
 
@@ -152,8 +152,9 @@ class ThermalCamera(QThread):
         cv.destroyAllWindows()
 
 class ThermalCam(QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, main_window):
         super().__init__(parent)
+        self.main_window = main_window
         self.thermal_camera = ThermalCamera()
         self.thermal_camera.frame_ready.connect(self.update_frame)
         self.thermal_camera.start()
@@ -164,11 +165,20 @@ class ThermalCam(QWidget):
         self.layout = QVBoxLayout()
         self.label = QLabel("Thermal Cam Feed")
         self.layout.addWidget(self.label)
+
+        self.back_button = QPushButton("Back")
+        self.back_button.clicked.connect(self.go_back)
+        self.layout.addWidget(self.back_button)
+
         self.setLayout(self.layout)
 
     def update_frame(self, frame):
         image = QImage(frame, frame.shape[1], frame.shape[0], frame.strides[0], QImage.Format_RGB888)
         self.label.setPixmap(QPixmap.fromImage(image))
+
+    def go_back(self):
+        self.thermal_camera.stop()
+        self.main_window.setCentralWidget(self.main_window.home_screen)
 
     def closeEvent(self, event):
         self.thermal_camera.stop()
