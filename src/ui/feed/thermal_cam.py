@@ -6,7 +6,7 @@ import threading
 import numpy as np
 import cv2 as cv
 from flask import Flask, Response
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QApplication
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QThread, pyqtSignal
 from senxor.mi48 import MI48, format_header, format_framestats
@@ -156,6 +156,7 @@ class ThermalCam(QWidget):
         super().__init__(parent)
         self.main_window = main_window
         self.thermal_camera = ThermalCamera()
+        self.thermal_camera.frame_ready.connect(self.update_frame)
         self.thermal_camera.start()
         self.thermal_camera.start_stream()
         self.init_ui()
@@ -165,11 +166,18 @@ class ThermalCam(QWidget):
         self.label = QLabel("Thermal Cam Feed is available on the web at http://localhost:5000/video_feed")
         self.layout.addWidget(self.label)
 
+        self.video_label = QLabel()
+        self.layout.addWidget(self.video_label)
+
         self.back_button = QPushButton("Back")
         self.back_button.clicked.connect(self.go_back)
         self.layout.addWidget(self.back_button)
 
         self.setLayout(self.layout)
+
+    def update_frame(self, frame):
+        image = QImage(frame, frame.shape[1], frame.shape[0], frame.strides[0], QImage.Format_RGB888)
+        self.video_label.setPixmap(QPixmap.fromImage(image))
 
     def go_back(self):
         self.thermal_camera.stop()
@@ -181,6 +189,11 @@ class ThermalCam(QWidget):
 
 # **Main Execution**
 if __name__ == "__main__":
-    roi = (0, 0, 61, 61)
-    cam = ThermalCamera(roi=roi, com_port=None)
-    cam.start_stream()
+    app = QApplication(sys.argv)
+    main_window = QWidget()
+    layout = QVBoxLayout(main_window)
+    thermal_cam = ThermalCam(main_window, main_window)
+    layout.addWidget(thermal_cam)
+    main_window.setLayout(layout)
+    main_window.show()
+    sys.exit(app.exec_())

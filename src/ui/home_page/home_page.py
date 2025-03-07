@@ -3,6 +3,7 @@ from PyQt5.QtCore import QSize
 from ui.feed.thermal_cam import ThermalCam
 from ui.feed.rgb_cam import RGBCam
 from ui.heater_controll.heater_control import HeaterControl
+from ui.feed.thermal_cam import ThermalCamera 
 
 class HomeScreen(QWidget):
     def __init__(self, parent):

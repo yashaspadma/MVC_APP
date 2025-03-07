@@ -34,12 +34,12 @@ class HeaterControl(QWidget):
 
     def start_heater(self):
         temperature = self.spin_box.value()
-        command = f"$8,{temperature},{temperature},{temperature},{temperature},{temperature},{temperature},{temperature}"
+        command = f"8,{temperature},{temperature},{temperature},{temperature},{temperature},{temperature},{temperature}"
         self.serial_model.send_command(command)
         print(f"Heater started at {temperature}%")
 
     def stop_heater(self):
-        command = "$STOP"
+        command = "8,1,1,1,1,1,1,1,1"
         self.serial_model.send_command(command)
         print("Heater stopped")
 
